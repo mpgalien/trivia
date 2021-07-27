@@ -2,12 +2,14 @@ exports = typeof window !== "undefined" && window !== null ? window : global;
 
 const minNumberOfPlayers = 2;
 const numberOfCoinsToWin = 6;
+const boardSize = 11;
 const POP = 'Pop';
 const SCIENCE = 'Science';
 const SPORTS = 'Sports';
 const ROCK = 'Rock';
 
 exports.Game = function () {
+  // TODO: add player class with properties like name, id, place, purse, inPenaltyBox
   var players = new Array();
   var places = new Array(6);
   var purses = new Array(6);
@@ -39,7 +41,9 @@ exports.Game = function () {
     }
   };
 
-  for (var i = 0; i < 50; i++) {
+  const categorySize = 50;
+
+  for (var i = 0; i < categorySize; i++) {
     popQuestions.push(POP + " Question " + i);
     scienceQuestions.push(SCIENCE + " Question " + i);
     sportsQuestions.push(SPORTS + " Question " + i);
@@ -50,7 +54,7 @@ exports.Game = function () {
     return this.numberOfPlayers() >= minNumberOfPlayers;
   };
 
-  this.add = function (playerName) {
+  this.addPlayer = function (playerName) {
     players.push(playerName);
     places[this.numberOfPlayers() - 1] = 0;
     purses[this.numberOfPlayers() - 1] = 0;
@@ -78,18 +82,22 @@ exports.Game = function () {
       console.log(rockQuestions.shift());
   };
 
+  this.isOddNumber = function(number) {
+    return number % 2 !== 0;
+  }
+
   this.roll = function (roll) {
     console.log(players[currentPlayer] + " is the current player");
     console.log("They have rolled a " + roll);
 
     if (inPenaltyBox[currentPlayer]) {
-      if (roll % 2 != 0) {
+      if (this.isOddNumber(roll)) {
         isGettingOutOfPenaltyBox = true;
 
         console.log(players[currentPlayer] + " is getting out of the penalty box");
         places[currentPlayer] = places[currentPlayer] + roll;
-        if (places[currentPlayer] > 11) {
-          places[currentPlayer] = places[currentPlayer] - 12;
+        if (places[currentPlayer] > boardSize) {
+          places[currentPlayer] = places[currentPlayer] - (boardSize + 1);
         }
 
         console.log(players[currentPlayer] + "'s new location is " + places[currentPlayer]);
@@ -102,8 +110,8 @@ exports.Game = function () {
     } else {
 
       places[currentPlayer] = places[currentPlayer] + roll;
-      if (places[currentPlayer] > 11) {
-        places[currentPlayer] = places[currentPlayer] - 12;
+      if (places[currentPlayer] > boardSize) {
+        places[currentPlayer] = places[currentPlayer] - (boardSize + 1);
       }
 
       console.log(players[currentPlayer] + "'s new location is " + places[currentPlayer]);
@@ -169,15 +177,19 @@ var hasWinner = false;
 
 var game = new Game();
 
-game.add('Chet');
-game.add('Pat');
-game.add('Sue');
+game.addPlayer('Chet');
+game.addPlayer('Pat');
+game.addPlayer('Sue');
+
+const maxDice = 6;
+const maxAnswer = 10;
+const wrongAnswer = 7;
 
 do {
 
-  game.roll(Math.floor(Math.random() * 6) + 1);
+  game.roll(Math.floor(Math.random() * maxDice) + 1);
 
-  if (Math.floor(Math.random() * 10) == 7) {
+  if (Math.floor(Math.random() * maxAnswer) == wrongAnswer) {
     hasWinner = game.wrongAnswer();
   } else {
     hasWinner = game.wasCorrectlyAnswered();
