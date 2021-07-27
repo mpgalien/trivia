@@ -1,6 +1,7 @@
 exports = typeof window !== "undefined" && window !== null ? window : global;
 
 const minNumberOfPlayers = 2;
+const numberOfCoinsToWin = 6;
 const POP = 'Pop';
 const SCIENCE = 'Science';
 const SPORTS = 'Sports';
@@ -21,7 +22,7 @@ exports.Game = function() {
   var isGettingOutOfPenaltyBox = false;
 
   var didPlayerWin = function(){
-    return !(purses[currentPlayer] == 6)
+    return purses[currentPlayer] === numberOfCoinsToWin;
   };
 
   var getCurrentCategory = function(){
@@ -129,7 +130,7 @@ exports.Game = function() {
         currentPlayer += 1;
         if(currentPlayer == players.length)
           currentPlayer = 0;
-        return true;
+        return false;
       }
 
 
@@ -160,11 +161,11 @@ exports.Game = function() {
     currentPlayer += 1;
     if(currentPlayer == players.length)
       currentPlayer = 0;
-		return true;
+		return false;
   };
 };
 
-var notAWinner = false;
+var hasWinner = false;
 
 var game = new Game();
 
@@ -177,9 +178,9 @@ do{
   game.roll(Math.floor(Math.random()*6) + 1);
 
   if(Math.floor(Math.random()*10) == 7){
-    notAWinner = game.wrongAnswer();
+    hasWinner = game.wrongAnswer();
   }else{
-    notAWinner = game.wasCorrectlyAnswered();
+    hasWinner = game.wasCorrectlyAnswered();
   }
 
-}while(notAWinner);
+}while(!hasWinner);
