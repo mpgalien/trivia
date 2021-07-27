@@ -1,5 +1,7 @@
 exports = typeof window !== "undefined" && window !== null ? window : global;
 
+const minNumberOfPlayers = 2;
+
 exports.Game = function() {
   var players          = new Array();
   var places           = new Array(6);
@@ -51,15 +53,15 @@ exports.Game = function() {
     rockQuestions.push(this.createRockQuestion(i));
   };
 
-  this.isPlayable = function(howManyPlayers){
-    return howManyPlayers >= 2;
+  this.isPlayable = function(){
+    return this.numberOfPlayers() >= minNumberOfPlayers;
   };
 
   this.add = function(playerName){
     players.push(playerName);
-    places[this.howManyPlayers() - 1] = 0;
-    purses[this.howManyPlayers() - 1] = 0;
-    inPenaltyBox[this.howManyPlayers() - 1] = false;
+    places[this.numberOfPlayers() - 1] = 0;
+    purses[this.numberOfPlayers() - 1] = 0;
+    inPenaltyBox[this.numberOfPlayers() - 1] = false;
 
     console.log(playerName + " was added");
     console.log("They are player number " + players.length);
@@ -67,7 +69,7 @@ exports.Game = function() {
     return true;
   };
 
-  this.howManyPlayers = function(){
+  this.numberOfPlayers = function(){
     return players.length;
   };
 
