@@ -1,6 +1,10 @@
 exports = typeof window !== "undefined" && window !== null ? window : global;
 
 const minNumberOfPlayers = 2;
+const POP = 'Pop';
+const SCIENCE = 'Science';
+const SPORTS = 'Sports';
+const ROCK = 'Rock';
 
 exports.Game = function() {
   var players          = new Array();
@@ -20,37 +24,25 @@ exports.Game = function() {
     return !(purses[currentPlayer] == 6)
   };
 
-  var currentCategory = function(){
-    if(places[currentPlayer] == 0)
-      return 'Pop';
-    if(places[currentPlayer] == 4)
-      return 'Pop';
-    if(places[currentPlayer] == 8)
-      return 'Pop';
-    if(places[currentPlayer] == 1)
-      return 'Science';
-    if(places[currentPlayer] == 5)
-      return 'Science';
-    if(places[currentPlayer] == 9)
-      return 'Science';
-    if(places[currentPlayer] == 2)
-      return 'Sports';
-    if(places[currentPlayer] == 6)
-      return 'Sports';
-    if(places[currentPlayer] == 10)
-      return 'Sports';
-    return 'Rock';
-  };
-
-  this.createRockQuestion = function(index){
-    return "Rock Question "+index;
+  var getCurrentCategory = function(){
+    
+    switch (places[currentPlayer]) {
+      case 0: case 4:case 8:
+        return POP;
+      case 1: case 5: case 9:
+        return SCIENCE;
+      case 2: case 6: case 10:
+        return SPORTS;
+      default:
+        return ROCK;
+    }
   };
 
   for(var i = 0; i < 50; i++){
-    popQuestions.push("Pop Question "+i);
-    scienceQuestions.push("Science Question "+i);
-    sportsQuestions.push("Sports Question "+i);
-    rockQuestions.push(this.createRockQuestion(i));
+    popQuestions.push(POP + " Question " + i);
+    scienceQuestions.push(SCIENCE + " Question " + i);
+    sportsQuestions.push(SPORTS + " Question " + i);
+    rockQuestions.push(ROCK + " Question " + i);
   };
 
   this.isPlayable = function(){
@@ -75,13 +67,13 @@ exports.Game = function() {
 
 
   var askQuestion = function(){
-    if(currentCategory() == 'Pop')
+    if(getCurrentCategory() == POP)
       console.log(popQuestions.shift());
-    if(currentCategory() == 'Science')
+    if(getCurrentCategory() == SCIENCE)
       console.log(scienceQuestions.shift());
-    if(currentCategory() == 'Sports')
+    if(getCurrentCategory() == SPORTS)
       console.log(sportsQuestions.shift());
-    if(currentCategory() == 'Rock')
+    if(getCurrentCategory() == ROCK)
       console.log(rockQuestions.shift());
   };
 
@@ -100,7 +92,7 @@ exports.Game = function() {
         }
 
         console.log(players[currentPlayer] + "'s new location is " + places[currentPlayer]);
-        console.log("The category is " + currentCategory());
+        console.log("The category is " + getCurrentCategory());
         askQuestion();
       }else{
         console.log(players[currentPlayer] + " is not getting out of the penalty box");
@@ -114,7 +106,7 @@ exports.Game = function() {
       }
 
       console.log(players[currentPlayer] + "'s new location is " + places[currentPlayer]);
-      console.log("The category is " + currentCategory());
+      console.log("The category is " + getCurrentCategory());
       askQuestion();
     }
   };
